@@ -1,1 +1,35 @@
 
+import java.util.Scanner;
+
+public class JOGO {
+
+    public JOGO() {
+        Scanner leitor = new Scanner(System.in);
+
+        String[] tesouros = new String[15];
+
+        exibirMenu();
+        int opcaoMenu = lerOpcaoMenu(leitor);
+        
+
+    }
+
+
+    private void exibirMenu(){
+        System.out.println("===== ILHA DOS TESOUROS =====\r\n" + //
+                        "1 - Mostrar instruções\r\n" + //
+                        "2 - Mostrar mapa\r\n" + //
+                        "3 - Jogar\r\n" + //
+                        "4 - Mostrar status\r\n" + //
+                        "5 - Sair");
+    }
+
+
+    private int lerOpcaoMenu(Scanner informer){
+
+        System.out.print("Escolha uma opção: ");
+        int opcao = informer.nextInt();
+
+        return opcao;
+    }
+}
