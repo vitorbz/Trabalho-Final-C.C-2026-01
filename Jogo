@@ -23,6 +23,8 @@ public class jogo {
             opcaoMenu1(opcaoMenu);
         }else if(opcaoMenu == 2){
             opcaoMenu2(opcaoMenu);
+        }else if(opcaoMenu == 3){
+            opcaoMenu3(opcaoMenu);
         }
     }
 
@@ -74,10 +76,18 @@ public class jogo {
     private void opcaoMenu2(int opcaoMenu){
         //mapa ilha
         for(int i = 0; i < mapailha.length; i++ ){
-            if()
+            if(mapaexplorado[i] == true){
+                System.out.println("["+ i +"] EXPLORADO" );
+            }else{
+                System.out.println("["+ i +"] ?");
+            }
             
         }
     }
 
+    private void opcaoMenu3(int opcaoMenu){
+        //jogar
+        
+    }
 
 }
