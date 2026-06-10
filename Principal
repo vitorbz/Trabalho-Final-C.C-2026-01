@@ -1,15 +1,11 @@
 public class principal {
 
-    public principal() {
+    public static void main(String[] args) {
 
-        System.out.println("\nBem-vindo ao jogo Ilha dos Tesouros!\r\n" + //
-                "\r\n" + //
-                "A ilha possui 15 posições, numeradas de 0 a 14.\r\n" + //
-                "Você possui 8 tentativas para encontrar os tesouros.\n");
-        JOGO jogo = new JOGO();
-    }
+        System.out.println("Bem-vindo ao jogo Ilha dos Tesouros!");
+        System.out.println("A ilha possui 15 posições, numeradas de 0 a 14.");
+        System.out.println("Você possui 8 tentativas para encontrar os tesouros.\n");
 
-    public static void main(String[] args) throws Exception {
-        new principal();
+        new jogo();
     }
 }
