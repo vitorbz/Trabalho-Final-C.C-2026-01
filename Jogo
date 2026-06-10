@@ -13,6 +13,8 @@ public class jogo {
         mapailha = new String[15];
         mapaexplorado = new boolean[15];
 
+
+        inicializarIlha();
         exibirMenu();
 
         int opcaoMenu = lerOpcaoMenu();
@@ -25,6 +27,7 @@ public class jogo {
             opcaoMenu2(opcaoMenu);
         }else if(opcaoMenu == 3){
             opcaoMenu3(opcaoMenu);
+           
         }
     }
 
@@ -95,9 +98,41 @@ public class jogo {
         }
     }
 
+    private void inicializarIlha(){
+
+    String[] tipos = {
+        "VAZIO",
+        "OURO",
+        "DIAMANTE",
+        "RUBI",
+        "BURACO",
+        "COBRA",
+        "ESPINHOS"
+    };
+
+    for(int i = 0; i < mapailha.length; i++){
+
+        int sorteio = (int)(Math.random() * 7);
+
+        mapailha[i] = tipos[sorteio];
+    }
+    }
+
     private void opcaoMenu3(int opcaoMenu){
-        //jogar
+        System.out.println("Escolha a posição: ");
+        int posição = leitor.nextInt();
+        if(posição < 0 || posição > 14){
+            System.out.println("Posição invalida.");
+            return;
+        }
+
+        if(mapaexplorado[posição]){
+            System.out.println("Essa posição já foi explorada.");
+        }
         
+        mapaexplorado[posição] = true;
+        System.out.println("Você explorou a posição " + posição);
+
     }
 
 }
