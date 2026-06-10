@@ -40,8 +40,18 @@ public class jogo {
 
     private int lerOpcaoMenu() {
 
-        System.out.print("Escolha uma opção: ");
-        int opcaoMenu = leitor.nextInt();
+        int opcaoMenu;
+        do {
+
+            System.out.print("Escolha uma opção: ");
+            opcaoMenu = leitor.nextInt();
+
+            if(opcaoMenu > 5 || opcaoMenu < 1){
+                System.out.println("A opção escolhida não existe");
+            }
+
+        } while (opcaoMenu > 5 || opcaoMenu < 1);
+
         return opcaoMenu;
     }
 
