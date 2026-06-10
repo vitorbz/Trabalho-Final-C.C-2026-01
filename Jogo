@@ -1,35 +1,83 @@
-
 import java.util.Scanner;
 
-public class JOGO {
+public class jogo {
 
-    public JOGO() {
-        Scanner leitor = new Scanner(System.in);
+    private Scanner leitor;
+    private String[] mapailha;
+    private boolean[] mapaexplorado;
 
-        String[] tesouros = new String[15];
+    public jogo() {
+
+        leitor = new Scanner(System.in);
+
+        mapailha = new String[15];
+        mapaexplorado = new boolean[15];
 
         exibirMenu();
-        int opcaoMenu = lerOpcaoMenu(leitor);
-        
 
+        int opcaoMenu = lerOpcaoMenu();
+
+        System.out.println("Você escolheu a opção: " + opcaoMenu);
+
+        if(opcaoMenu == 1){
+            opcaoMenu1(opcaoMenu);
+        }else if(opcaoMenu == 2){
+            opcaoMenu2(opcaoMenu);
+        }
     }
 
+    private void exibirMenu() {
 
-    private void exibirMenu(){
-        System.out.println("===== ILHA DOS TESOUROS =====\r\n" + //
-                        "1 - Mostrar instruções\r\n" + //
-                        "2 - Mostrar mapa\r\n" + //
-                        "3 - Jogar\r\n" + //
-                        "4 - Mostrar status\r\n" + //
-                        "5 - Sair");
+        System.out.println("===== ILHA DOS TESOUROS =====");
+        System.out.println("1 - Mostrar instruções");
+        System.out.println("2 - Mostrar mapa");
+        System.out.println("3 - Jogar");
+        System.out.println("4 - Mostrar status");
+        System.out.println("5 - Sair");
     }
 
-
-    private int lerOpcaoMenu(Scanner informer){
+    private int lerOpcaoMenu() {
 
         System.out.print("Escolha uma opção: ");
-        int opcao = informer.nextInt();
-
-        return opcao;
+        int opcaoMenu = leitor.nextInt();
+        return opcaoMenu;
     }
+
+    private void opcaoMenu1(int opcaoMenu){
+        System.out.println("\n===== INSTRUÇÕES =====");
+
+        System.out.println("A ilha possui 15 posições, numeradas de 0 a 14.");
+        System.out.println("Você possui 8 tentativas para explorar a ilha.");
+        System.out.println("Em cada jogada, escolha uma posição para explorar.");
+
+        System.out.println("\nTESOUROS:");
+        System.out.println("OURO = +10 pontos");
+        System.out.println("DIAMANTE = +20 pontos");
+        System.out.println("RUBI = +15 pontos");
+
+        System.out.println("\nARMADILHAS:");
+        System.out.println("BURACO = -5 pontos");
+        System.out.println("COBRA = -10 pontos");
+        System.out.println("ESPINHOS = -7 pontos");
+
+        System.out.println("\nVAZIO = 0 pontos");
+
+        System.out.println("\nVocê não pode explorar a mesma posição duas vezes.");
+        System.out.println("O jogo termina quando:");
+        System.out.println("- Acabarem as tentativas;");
+        System.out.println("- Todos os tesouros forem encontrados;");
+        System.out.println("- O jogador escolher a opção Sair.");
+
+        System.out.println("\n======================\n");
+    }   
+
+    private void opcaoMenu2(int opcaoMenu){
+        //mapa ilha
+        for(int i = 0; i < mapailha.length; i++ ){
+            if()
+            
+        }
+    }
+
+
 }
