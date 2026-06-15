@@ -47,6 +47,7 @@ public class Jogo {
             armadilhasEncontradas = 0;
             espacosVaziosEncontradios = 0;
             tentativasRestantes = 8;
+            
             for (int i = 0; i < posicaoEplorada.length; i++) {
                 posicaoEplorada[i] = false;
             }
@@ -220,7 +221,8 @@ public class Jogo {
     private String opcaoMenu5(Scanner informer) {
 
         System.out.print("FIM de jogo. Deseja jogar novamente? (S/N): ");
-        String jogarNovamente = informer.next();
+        String jogarNovamente = informer.next().toUpperCase();
+        System.out.println();
         return jogarNovamente;
     }
 
