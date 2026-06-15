@@ -7,8 +7,9 @@ public class Jogo {
         Scanner leitor = new Scanner(System.in);
 
         String mapailha[] = new String[15];
-        boolean mapaexplorado[] = new boolean[15];
         boolean posicaoEplorada[] = new boolean[15];
+
+        inicializarIlha(mapailha);
 
         int opcaoMenu;
 
@@ -20,13 +21,14 @@ public class Jogo {
             System.out.println("Você escolheu a opção: " + opcaoMenu);
 
             if (opcaoMenu == 1) {
-                opcaoMenu1(opcaoMenu);
+                opcaoMenu1();
             } else if (opcaoMenu == 2) {
-                opcaoMenu2(opcaoMenu, posicaoEplorada, mapaexplorado, mapailha);
+                opcaoMenu2(posicaoEplorada, mapailha);
             } else if (opcaoMenu == 3) {
-                opcaoMenu3(opcaoMenu, leitor, posicaoEplorada);
+                opcaoMenu3(leitor, posicaoEplorada);
             }
-        } while (opcaoMenu < 6 || opcaoMenu > 0);
+
+        } while (opcaoMenu > 0 && opcaoMenu < 5);
     }
 
     private void exibirMenu() {
@@ -42,6 +44,7 @@ public class Jogo {
     private int lerOpcaoMenu(Scanner informer) {
 
         int opcaoMenu;
+
         do {
 
             System.out.print("Escolha uma opção: ");
@@ -56,7 +59,7 @@ public class Jogo {
         return opcaoMenu;
     }
 
-    private void opcaoMenu1(int opcaoMenu) {
+    private void opcaoMenu1() {
         System.out.println("\n===== INSTRUÇÕES =====");
 
         System.out.println("A ilha possui 15 posições, numeradas de 0 a 14.");
@@ -84,12 +87,13 @@ public class Jogo {
         System.out.println("\n======================\n");
     }
 
-    private void opcaoMenu2(int opcaoMenu, boolean[] posicoesEploradas, boolean[] mapaexplorados, String[] mapasIlha) {
-        // mapa ilha
+    private void opcaoMenu2(boolean[] posicoesEploradas, String[] mapasIlha) {
+
         for (int i = 0; i < mapasIlha.length; i++) {
-            if (mapaexplorados[i] == true) {
+
+            if (posicoesEploradas[i] == true) {
                 System.out.println("[" + i + "] EXPLORADO");
-                posicoesEploradas[i] = true;
+
             } else {
                 System.out.println("[" + i + "] ?");
             }
@@ -116,9 +120,11 @@ public class Jogo {
         }
     }
 
-    private void opcaoMenu3(int opcaoMenu, Scanner informer, boolean[] mapasExplorados) {
+    private void opcaoMenu3(Scanner informer, boolean[] mapasExplorados) {
+
         System.out.println("Escolha a posição: ");
         int posição = informer.nextInt();
+
         if (posição < 0 || posição > 14) {
             System.out.println("Posição invalida.");
             return;
@@ -126,11 +132,10 @@ public class Jogo {
 
         if (mapasExplorados[posição]) {
             System.out.println("Essa posição já foi explorada.");
-        }
+            return;
 
+        }
         mapasExplorados[posição] = true;
         System.out.println("Você explorou a posição " + posição);
-
     }
-
 }
