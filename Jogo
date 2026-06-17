@@ -2,23 +2,28 @@ import java.util.Scanner;
 
 public class Jogo {
 
-    private int pontosTotaisDoJogo = 0;
-    private int tesourosEncontrados = 0;
-    private int armadilhasEncontradas = 0;
-    private int espacosVaziosEncontradios = 0;
-    private int tentativasRestantes = 8;
-
     public Jogo() {
+
+        String[] mapaIlha = new String[15];
+        boolean[] posicaoExplorada = new boolean[15];
+
+        inicializarIlha(mapaIlha);
+
+        iniciar(mapaIlha, posicaoExplorada);
+    }
+
+    public void iniciar(String[] mapaIlha, boolean[] posicaoExplorada) {
 
         Scanner leitor = new Scanner(System.in);
 
-        String mapailha[] = new String[15];
-        boolean posicaoEplorada[] = new boolean[15];
-
-        inicializarIlha(mapailha);
+        int pontosTotaisDoJogo = 0;
+        int tesourosEncontrados = 0;
+        int armadilhasEncontradas = 0;
+        int espacosVaziosEncontrados = 0;
+        int tentativasRestantes = 8;
 
         int opcaoMenu;
-        String JogarNovamente = "";
+        String jogarNovamente = "";
 
         do {
             do {
@@ -29,31 +34,76 @@ public class Jogo {
                 System.out.println("Você escolheu a opção: " + opcaoMenu + "\n");
 
                 if (opcaoMenu == 1) {
-                    opcaoMenu1();
+                    exibirInstrucoes();
                 } else if (opcaoMenu == 2) {
-                    opcaoMenu2(posicaoEplorada, mapailha);
+                    mostrarMapa(posicaoExplorada, mapaIlha);
                 } else if (opcaoMenu == 3) {
-                    opcaoMenu3(leitor, posicaoEplorada, mapailha);
+
+                    String resultado = jogar(leitor, posicaoExplorada, mapaIlha);
+
+                    if (resultado.equals("VAZIO")) {
+                        espacosVaziosEncontrados++;
+                        tentativasRestantes--;
+
+                    } else if (resultado.equals("OURO")) {
+                        pontosTotaisDoJogo += 10;
+                        tesourosEncontrados++;
+                        tentativasRestantes--;
+
+                    } else if (resultado.equals("DIAMANTE")) {
+                        pontosTotaisDoJogo += 20;
+                        tesourosEncontrados++;
+                        tentativasRestantes--;
+
+                    } else if (resultado.equals("RUBI")) {
+                        pontosTotaisDoJogo += 15;
+                        tesourosEncontrados++;
+                        tentativasRestantes--;
+
+                    } else if (resultado.equals("BURACO")) {
+                        pontosTotaisDoJogo -= 5;
+                        armadilhasEncontradas++;
+                        tentativasRestantes--;
+
+                    } else if (resultado.equals("COBRA")) {
+                        pontosTotaisDoJogo -= 10;
+                        armadilhasEncontradas++;
+                        tentativasRestantes--;
+
+                    } else if (resultado.equals("ESPINHOS")) {
+                        pontosTotaisDoJogo -= 7;
+                        armadilhasEncontradas++;
+                        tentativasRestantes--;
+                    }
+
                 } else if (opcaoMenu == 4) {
-                    opcaoMenu4();
+
+                    mostrarStatus(pontosTotaisDoJogo, tentativasRestantes, tesourosEncontrados,
+                            armadilhasEncontradas, espacosVaziosEncontrados);
                 }
 
-            } while (opcaoMenu != 5 && verificarFimDeJogo(mapailha) == false);
+            } while (opcaoMenu != 5 && verificarFimDeJogo(mapaIlha, tentativasRestantes, tesourosEncontrados) == false);
 
-            JogarNovamente = opcaoMenu5(leitor);
+            mostrarValores(pontosTotaisDoJogo, tesourosEncontrados, armadilhasEncontradas, espacosVaziosEncontrados);
+
+            System.out.println();
+
+            jogarNovamente = perguntarReinicio(leitor);
 
             pontosTotaisDoJogo = 0;
             tesourosEncontrados = 0;
             armadilhasEncontradas = 0;
-            espacosVaziosEncontradios = 0;
+            espacosVaziosEncontrados = 0;
             tentativasRestantes = 8;
-            
-            for (int i = 0; i < posicaoEplorada.length; i++) {
-                posicaoEplorada[i] = false;
-            }
-            inicializarIlha(mapailha);
 
-        } while (JogarNovamente.equals("S"));
+            for (int i = 0; i < posicaoExplorada.length; i++) {
+                posicaoExplorada[i] = false;
+            }
+            inicializarIlha(mapaIlha);
+
+        } while (jogarNovamente.equals("S"));
+
+        System.out.println("Jogo encerrado.\n");
     }
 
     private void exibirMenu() {
@@ -84,7 +134,7 @@ public class Jogo {
         return opcaoMenu;
     }
 
-    private void opcaoMenu1() {
+    private void exibirInstrucoes() {
         System.out.println("===== INSTRUÇÕES =====");
 
         System.out.println("A ilha possui 15 posições, numeradas de 0 a 14.");
@@ -112,11 +162,11 @@ public class Jogo {
         System.out.println("\n======================\n");
     }
 
-    private void opcaoMenu2(boolean[] posicoesEploradas, String[] mapasIlha) {
+    private void mostrarMapa(boolean[] posicoesExploradas, String[] mapaIlha) {
 
-        for (int i = 0; i < mapasIlha.length; i++) {
+        for (int i = 0; i < mapaIlha.length; i++) {
 
-            if (posicoesEploradas[i] == true) {
+            if (posicoesExploradas[i] == true) {
                 System.out.println("[" + i + "] EXPLORADO");
 
             } else {
@@ -126,7 +176,14 @@ public class Jogo {
         System.out.println();
     }
 
-    private void inicializarIlha(String[] mapasIlha) {
+    private void inicializarIlha(String[] mapaIlha) {
+
+        for (int i = 0; i < mapaIlha.length; i++) {
+            mapaIlha[i] = sortear();
+        }
+    }
+
+    private String sortear() {
 
         String[] tipos = {
                 "VAZIO",
@@ -138,106 +195,101 @@ public class Jogo {
                 "ESPINHOS"
         };
 
-        for (int i = 0; i < mapasIlha.length; i++) {
+        int posicao = (int) (Math.random() * 7);
 
-            int sorteio = (int) (Math.random() * 7);
-
-            mapasIlha[i] = tipos[sorteio];
-        }
+        return tipos[posicao];
     }
 
-    private void opcaoMenu3(Scanner informer, boolean[] mapasExplorados, String[] mapasIlha) {
+    private String jogar(Scanner informer, boolean[] posicoesExploradas, String[] mapaIlha) {
 
         System.out.print("Escolha a posição: ");
         int posicao = informer.nextInt();
 
         if (posicao < 0 || posicao > 14) {
             System.out.println("Posição invalida.");
-            return;
+            return "INVALIDA";
         }
 
-        if (mapasExplorados[posicao]) {
+        if (posicoesExploradas[posicao]) {
             System.out.println("Essa posição já foi explorada.");
-            return;
-
+            return "INVALIDA";
         }
-        mapasExplorados[posicao] = true;
+
+        posicoesExploradas[posicao] = true;
         System.out.println("Você explorou a posição " + posicao);
 
-        if (mapasIlha[posicao].equals("VAZIO")) {
+        String tipo = mapaIlha[posicao];
+
+        if (tipo.equals("VAZIO")) {
             System.out.println("Você encontrou VAZIO! Nenhum ponto somado ou subtraído");
-            espacosVaziosEncontradios++;
-            tentativasRestantes--;
 
-        } else if (mapasIlha[posicao].equals("OURO")) {
+        } else if (tipo.equals("OURO")) {
             System.out.println("Você encontrou OURO! +10 pontos");
-            pontosTotaisDoJogo += 10;
-            tesourosEncontrados++;
-            tentativasRestantes--;
 
-        } else if (mapasIlha[posicao].equals("DIAMANTE")) {
+        } else if (tipo.equals("DIAMANTE")) {
             System.out.println("Você encontrou DIAMANTE! +20 pontos");
-            pontosTotaisDoJogo += 20;
-            tesourosEncontrados++;
-            tentativasRestantes--;
 
-        } else if (mapasIlha[posicao].equals("RUBI")) {
+        } else if (tipo.equals("RUBI")) {
             System.out.println("Você encontrou RUBI! +15 pontos");
-            pontosTotaisDoJogo += 15;
-            tesourosEncontrados++;
-            tentativasRestantes--;
 
-        } else if (mapasIlha[posicao].equals("BURACO")) {
+        } else if (tipo.equals("BURACO")) {
             System.out.println("Você encontrou BURACO! -5 pontos");
-            pontosTotaisDoJogo -= 5;
-            armadilhasEncontradas++;
-            tentativasRestantes--;
 
-        } else if (mapasIlha[posicao].equals("COBRA")) {
+        } else if (tipo.equals("COBRA")) {
             System.out.println("Você encontrou COBRA! -10 pontos");
-            pontosTotaisDoJogo -= 10;
-            armadilhasEncontradas++;
-            tentativasRestantes--;
 
-        } else if (mapasIlha[posicao].equals("ESPINHOS")) {
+        } else if (tipo.equals("ESPINHOS")) {
             System.out.println("Você encontrou ESPINHOS! -7 pontos");
-            pontosTotaisDoJogo -= 7;
-            armadilhasEncontradas++;
-            tentativasRestantes--;
-
         }
+
         System.out.println();
+
+        return tipo;
     }
 
-    private void opcaoMenu4() {
+    private void mostrarStatus(int pontosTotaisDoJogo, int tentativasRestantes, int tesourosEncontrados,
+            int armadilhasEncontradas, int espacosVaziosEncontrados) {
 
-        System.out.println("Pontuação atual: " + pontosTotaisDoJogo);
+        System.out.println("Pontuação atual: " + pontosTotaisDoJogo + " pontos");
         System.out.println("Quantidade de tentativas restantes : " + tentativasRestantes);
         System.out.println("Quantidade de tesouros encontrados: " + tesourosEncontrados);
         System.out.println("Quantidade de armadilhas encontradas : " + armadilhasEncontradas);
-        System.out.println("Quantidade de posições vazias encontradas : " + espacosVaziosEncontradios + "\n");
+        System.out.println("Quantidade de posições vazias encontradas : " + espacosVaziosEncontrados + "\n");
     }
 
-    private String opcaoMenu5(Scanner informer) {
+    private String perguntarReinicio(Scanner informer) {
 
-        System.out.print("FIM de jogo. Deseja jogar novamente? (S/N): ");
-        String jogarNovamente = informer.next().toUpperCase();
-        System.out.println();
+        String jogarNovamente = "";
+        boolean repetir = false;
+
+        do {
+
+            System.out.print("FIM de jogo. Deseja jogar novamente? (S/N): ");
+            jogarNovamente = informer.next().toUpperCase();
+
+            if (jogarNovamente.equals("S") || jogarNovamente.equals("N")) {
+                repetir = false; 
+            } else {
+                System.out.println("Digite S (sim) ou N (não)");
+                repetir = true;
+            }
+
+        } while (repetir);
+
         return jogarNovamente;
     }
 
-
-    private boolean verificarFimDeJogo(String[] mapasIlha) {
+    private boolean verificarFimDeJogo(String[] mapaIlha, int tentativasRestantes, int tesourosEncontrados) {
 
         if (tentativasRestantes <= 0) {
             return true;
         }
 
         int totalTesouros = 0;
-        for (int i = 0; i < mapasIlha.length; i++) {
-            if (mapasIlha[i].equals("OURO")
-                    || mapasIlha[i].equals("DIAMANTE")
-                    || mapasIlha[i].equals("RUBI")) {
+        for (int i = 0; i < mapaIlha.length; i++) {
+            if (mapaIlha[i].equals("OURO")
+                    || mapaIlha[i].equals("DIAMANTE")
+                    || mapaIlha[i].equals("RUBI")) {
                 totalTesouros++;
             }
         }
@@ -247,5 +299,13 @@ public class Jogo {
         }
 
         return false;
+    }
+
+    private void mostrarValores(int pontosTotaisDoJogos, int tesourosEncontrado, int armadilhasEncontrada,
+            int espacosVaziosEncontrados) {
+        System.out.println("\nTesouros encontrados: " + tesourosEncontrado);
+        System.out.println("Armadilhas encontradas: " + armadilhasEncontrada);
+        System.out.println("Posições vazias exploradas: " + espacosVaziosEncontrados);
+        System.out.println("Pontuação final: " + pontosTotaisDoJogos);
     }
 }
